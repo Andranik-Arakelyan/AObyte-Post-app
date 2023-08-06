@@ -1,0 +1,57 @@
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.topSide {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.topSide h2 {
+  flex: 1 1;
+  text-align: center;
+  font-size: 25px;
+  font-weight: 700;
+  padding: 2px 2px;
+}
+
+.close {
+  display: flex;
+  align-self: start;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background-color: transparent;
+  border: 2px solid black;
+  border-radius: 50%;
+  margin-right: 15px;
+  cursor: pointer;
+}
+
+.close:hover {
+  box-shadow: 0 0 2px black;
+}
+
+.profileInfo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 45px;
+}
+
+.formPart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+  margin: 12px 0 18px;
+}
+
+.pages {
+  display: flex;
+  gap: 25px;
+}
