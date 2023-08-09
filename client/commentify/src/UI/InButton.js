@@ -1,10 +1,10 @@
 import React from "react";
 import classes from "./InButton.module.css";
 
-function InButton(props) {
+function InButton({ onClick, type, children }) {
   return (
-    <button onClick={props.onClick} className={classes.Button}>
-      {props.children}
+    <button onClick={onClick} className={classes.Button} type={type}>
+      {children}
     </button>
   );
 }
