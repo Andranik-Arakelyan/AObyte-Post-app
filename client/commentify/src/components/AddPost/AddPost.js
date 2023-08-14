@@ -1,6 +1,7 @@
 // import { addPostWithImage } from "../api/api";
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
+import { motion } from "framer-motion";
 
 import InButton from "../../UI/InButton";
 import CloseIcon from "@mui/icons-material/Close";
@@ -15,16 +16,27 @@ import { Backdrop } from "../../UI/Backdrop";
 import { useDispatch } from "react-redux";
 import { closeModal } from "../../features/addPostModal/addPostModalSlice";
 import { getRandomAvatar } from "../../helpers";
+import { addNewPost } from "../../features/posts/postsApi";
+import { addPost } from "../../features/user/userSlice";
 
 const AddPostModal = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [uploaded, setUploaded] = useState("");
+  const [uploaded, setUploaded] = useState(null);
+
+  const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("SUBMITED");
+
+    const uploadingFiles = {
+      title,
+      description,
+      image: uploaded,
+    };
+
+    dispatch(addPost(uploadingFiles));
   };
 
   const toNextPage = () => {
@@ -51,27 +63,24 @@ const AddPostModal = () => {
       case 2:
         return (
           <div>
-            <h3>Describe your post, what's it about?</h3>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Enter description"
+              placeholder="Describe your post, what's it about?"
             />
           </div>
         );
       case 3:
         return (
-          <div>
-            <h3>You can upload an image for cover</h3>
-            <label htmlFor="upload">
-              <InButton>
-                <AddAPhotoIcon />
-              </InButton>
+          <div className={classes.uploadContainer}>
+            <h3>Upload a cover photo</h3>
+            <label className={classes.fileLabel} htmlFor="upload">
+              <AddAPhotoIcon />
             </label>
             <input
               id="upload"
               type="file"
-              value={uploaded}
+              className={classes.fileInput}
               onChange={(e) => setUploaded(e.target.files[0])}
             />
           </div>
@@ -88,7 +97,7 @@ const AddPostModal = () => {
             <span>Create Post</span>
           </h2>
           <div className={classes.close}>
-            <InButton>
+            <InButton onClick={() => dispatch(closeModal())}>
               <CloseIcon />
             </InButton>
           </div>
@@ -97,7 +106,7 @@ const AddPostModal = () => {
           <Avatar src={getRandomAvatar()} alt="ava" />
           <span>Name Surname</span>
         </div>
-        <form onSubmit={handleSubmit} className={classes.formPart}>
+        <form onSubmit={(e) => handleSubmit(e)} className={classes.formPart}>
           {renderPageContent()}
           <div className={classes.pages}>
             {currentPage > 1 && (
@@ -109,10 +118,14 @@ const AddPostModal = () => {
             {currentPage < 3 && (
               <InButton type="button" onClick={toNextPage}>
                 <span>Next</span>
-                <Next color="primary" />
+                <Next />
               </InButton>
             )}
-            {currentPage === 3 && <InButton type="submit">Submit</InButton>}
+            {currentPage === 3 && (
+              <button className={classes.submitBtn} type="submit">
+                Submit
+              </button>
+            )}
           </div>
         </form>
       </div>
@@ -121,37 +134,7 @@ const AddPostModal = () => {
 };
 
 function AddPost(props) {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [uploaded, setUploaded] = useState(null);
-
   const dispatch = useDispatch();
-
-  const handleTitleChange = (value) => {
-    setTitle(value);
-  };
-
-  const handleDescriptionChange = (value) => {
-    setDescription(value);
-  };
-
-  const handleUploadedChange = (e) => {
-    setUploaded(e.target.files[0]);
-  };
-
-  const handlePostUpload = (e) => {
-    e.preventDefault();
-
-    const uploadingFiles = {
-      title,
-      description,
-      image: uploaded,
-    };
-
-    // addPostWithImage(uploadingFiles)
-    //   .then((res) => {})
-    //   .catch((err) => console.log("CHEXAVVV"));
-  };
 
   return (
     <>
@@ -168,47 +151,6 @@ function AddPost(props) {
         document.getElementById("modal")
       )}
     </>
-    // <div className={classes.container}>
-    //   <div className={classes.toBack}>
-    //     <InButton>
-    //       <KeyboardBackspaceIcon />
-    //       BACK
-    //     </InButton>
-    //   </div>
-
-    //   <div
-    //     style={{
-    //       display: "flex",
-    //       justifyContent: "center",
-    //       margin: "50px 45px",
-    //     }}
-    //   >
-    //     <form
-    //       encType="multipart/form-data"
-    //       onSubmit={handlePostUpload}
-    //       style={{ display: "flex", flexDirection: "column", gap: "25px" }}
-    //     >
-    //       <input
-    //         name="title"
-    //         type="text"
-    //         placeholder="Title"
-    //         onChange={(e) => handleTitleChange(e.target.value)}
-    //       />
-    //       <input
-    //         name="description"
-    //         type="text"
-    //         placeholder="description"
-    //         onChange={(e) => handleDescriptionChange(e.target.value)}
-    //       />
-    //       <input
-    //         name="image"
-    //         type="file"
-    //         onChange={(e) => handleUploadedChange(e)}
-    //       />
-    //       <button type="submit">Post It</button>
-    //     </form>
-    //   </div>
-    // </div>
   );
 }
 

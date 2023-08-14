@@ -3,6 +3,7 @@
   box-shadow: 0 0 6px 0px #ca817c;
   padding: 20px 0;
   border-radius: 12px;
+  background-color: #f2f3f4;
 }
 
 .card h3 {
@@ -18,7 +19,6 @@
 }
 
 .modal {
-  background-color: #f1efe7;
   position: fixed;
   top: 20vh;
   left: 18%;
