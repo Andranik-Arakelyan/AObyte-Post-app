@@ -1,0 +1,29 @@
+.card {
+  width: 60%;
+  box-shadow: 0 0 6px 0px #ca817c;
+  padding: 20px 0;
+  border-radius: 12px;
+  background-color: #f2f3f4;
+}
+
+.card h3 {
+  font-size: 35px;
+  color: #1976d2;
+  margin-top: 6px;
+}
+
+.disabled {
+  background-color: #fffffed0;
+  color: rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+}
+
+.modal {
+  position: fixed;
+  top: 20vh;
+  left: 18%;
+  margin: 0 auto;
+  width: 60%;
+  z-index: 100;
+  overflow: hidden;
+}

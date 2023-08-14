@@ -1,0 +1,80 @@
+.header {
+  display: flex;
+  width: 100%;
+  height: 55px;
+  z-index: 5;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.boxShadow {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.container {
+  display: flex;
+  width: 85%;
+  height: 50px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+}
+
+.logo {
+  width: 280px;
+  margin-right: auto;
+  cursor: pointer;
+}
+
+.searchBar {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.searchBar input {
+  width: 220px;
+  border: 2px solid #131032;
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 16px;
+  outline: none;
+  background-color: #ffffff;
+}
+
+.searchBar img {
+  cursor: pointer;
+}
+
+.searchBar img:hover {
+  border-radius: 10px;
+  box-shadow: 0px 0px 3px 3px #98be93;
+}
+
+.login {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.login a {
+  text-decoration: none;
+  font-weight: 700;
+  color: #131032;
+  font-size: 17px;
+  transition: all 0.3s;
+}
+
+.login a:hover {
+  color: #fe6257;
+}
+
+.login button {
+  color: #1976d2;
+}
