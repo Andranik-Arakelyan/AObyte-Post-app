@@ -5,11 +5,7 @@ import Card from "../../UI/Card";
 
 import { Link } from "react-router-dom";
 
-import { PostDataContext } from "../../context";
-
 import classes from "./Post.module.css";
-import { useDispatch, useSelector } from "react-redux";
-import { selectPosts } from "../../features/posts/postsSlice";
 
 function Post({ post }) {
   return (

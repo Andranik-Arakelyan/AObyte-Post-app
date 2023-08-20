@@ -1,13 +1,32 @@
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import { data } from "./data.js";
 import { v4 } from "uuid";
 import Multer from "multer";
+import authRoutes from "./routes/auth.js";
+import verifyRoutes from "./routes/verify.js";
+import checkUserRoutes from "./routes/checkUser.js";
+import dbConfig from "./config/db.js";
+import { jwtVerify } from "./middleware/jwtVerify.js";
+import User from "./models/User.js";
 
 const app = express();
 
+const port = process.env.PORT || 5000;
+
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
+app.use(cookieParser());
+
+app.use(authRoutes);
+app.use(verifyRoutes);
+app.use(checkUserRoutes);
 
 const upload = Multer({
   storage: Multer.memoryStorage(),
@@ -17,7 +36,7 @@ const upload = Multer({
 });
 
 // route which gets posts from Mongo db
-app.get("/api/posts", async (req, res) => {
+app.get("/posts", async (req, res) => {
   //here must be posts fetching logic from Mongo
   res.send(data);
 });
@@ -35,6 +54,16 @@ app.post("/api/posts", upload.single("image"), async (req, res) => {
 
   // here must be adding post to mongo logic
   res.send(post);
+});
+
+app.get("/test", jwtVerify, (req, res) => {
+  const { userId } = req;
+  User.findOne({ _id: userId }).then((result) => {
+    res.json({
+      message: "SUCCESSED",
+      user: result,
+    });
+  });
 });
 
 //route which creates new comment
@@ -62,4 +91,6 @@ app.delete("/api/posts/:postId/comments/:commentId", async (req, res) => {
   res.send("Deleted successfuly");
 });
 
-app.listen(3001);
+app.listen(port, () => {
+  console.log(`Server is listening on port ${port}`);
+});

@@ -1,7 +1,6 @@
 // import { addPostWithImage } from "../api/api";
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
-import { motion } from "framer-motion";
 
 import InButton from "../../UI/InButton";
 import CloseIcon from "@mui/icons-material/Close";
@@ -16,7 +15,6 @@ import { Backdrop } from "../../UI/Backdrop";
 import { useDispatch } from "react-redux";
 import { closeModal } from "../../features/addPostModal/addPostModalSlice";
 import { getRandomAvatar } from "../../helpers";
-import { addNewPost } from "../../features/posts/postsApi";
 import { addPost } from "../../features/user/userSlice";
 
 const AddPostModal = () => {
