@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
@@ -11,21 +11,10 @@ import { getRandomAvatar } from "../../helpers";
 import InButton from "../../UI/InButton";
 
 import classes from "./Comment.module.css";
-// import Replies from "./Replies";
 
 function Comment({ openDeleteDialog, commentData }) {
-  const { id: comId, comment, replies: comReplies, rating } = commentData;
+  const { comment, rating } = commentData;
   const avatar = getRandomAvatar();
-  // const [openReplies, setOpenReplies] = useState(false);
-  // const [replies, setReplies] = useState(comReplies || []);
-
-  // const handleRepliesModal = () => {
-  //   setOpenReplies((prevOpenReplies) => !prevOpenReplies);
-  // };
-
-  // const handlerepliesRefresh = (newReplies) => {
-  //   setReplies(newReplies);
-  // };
 
   const gradeIconStyle = {
     color: "#FFC107",

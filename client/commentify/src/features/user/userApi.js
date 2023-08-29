@@ -1,5 +1,16 @@
 import { api } from "../../api/api";
 
+export const checkUserExistance = () => api.get(`check-user`);
+
+export const createUser = (formData) => api.post(`sign-up`, formData);
+
+export const login = (formData) => api.post(`sign-in`, formData);
+
+export const logOut = () => api.get(`logOut`);
+
+export const verify = (userId, uniqueString) =>
+  api.get(`verify/${userId}/${uniqueString}`);
+
 export const addNewPost = async ({ title, description, image }) => {
   try {
     const formData = new FormData();

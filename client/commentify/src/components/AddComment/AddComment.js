@@ -9,8 +9,6 @@ import InButton from "../../UI/InButton";
 // import { addCom } from "../../features/postsSlice";
 import { useDispatch } from "react-redux";
 
-import send from "../../assets/send.png";
-
 import classes from "./AddComment.module.css";
 import { addComment } from "../../features/posts/postsSlice";
 
