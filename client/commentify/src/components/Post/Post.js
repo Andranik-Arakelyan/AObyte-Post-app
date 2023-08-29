@@ -15,9 +15,11 @@ function Post({ post }) {
         <Link to={`posts/${post.id}`}>
           <h3>{post.title}</h3>
         </Link>
+        <p>{post.createdAt}</p>
+        <p>{typeof post.createdAt}</p>
       </div>
       <div className={classes.comments}>
-        <Comments commentData={post.comments} postId={post.id} />
+        {/* <Comments commentData={post.comments} postId={post.id} /> */}
       </div>
     </Card>
     // </PostDataContext.Provider>

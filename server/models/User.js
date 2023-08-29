@@ -20,6 +20,9 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
+  avatar_url: {
+    type: String,
+  },
   posts: [String],
   verified: Boolean,
 });

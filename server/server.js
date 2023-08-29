@@ -7,6 +7,7 @@ import Multer from "multer";
 import authRoutes from "./routes/auth.js";
 import verifyRoutes from "./routes/verify.js";
 import checkUserRoutes from "./routes/checkUser.js";
+import postRoutes from "./routes/post.js";
 import dbConfig from "./config/db.js";
 import { jwtVerify } from "./middleware/jwtVerify.js";
 import User from "./models/User.js";
@@ -27,33 +28,12 @@ app.use(cookieParser());
 app.use(authRoutes);
 app.use(verifyRoutes);
 app.use(checkUserRoutes);
-
-const upload = Multer({
-  storage: Multer.memoryStorage(),
-  limits: {
-    fileSize: 10 * 1024 * 1024,
-  },
-});
+app.use(postRoutes);
 
 // route which gets posts from Mongo db
 app.get("/posts", async (req, res) => {
   //here must be posts fetching logic from Mongo
   res.send(data);
-});
-
-//route which adds new post in to Mongo db
-app.post("/api/posts", upload.single("image"), async (req, res) => {
-  const { title, description } = req.body;
-
-  const post = {
-    id: v4(),
-    date: new Date(),
-    title,
-    description,
-  };
-
-  // here must be adding post to mongo logic
-  res.send(post);
 });
 
 app.get("/test", jwtVerify, (req, res) => {

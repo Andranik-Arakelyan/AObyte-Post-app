@@ -95,14 +95,7 @@ export const userSlice = createSlice({
       })
       .addCase(addUser.fulfilled, (state, action) => {
         if (action.payload.status === "FAILED") {
-          state.error = action.payload.message;
-        }
-      })
-      .addCase(verifyUser.fulfilled, (state, action) => {
-        if (action.payload.status === "SUCCESS") {
-          state.error = null;
-          state.auth = true;
-          state.userData = action.payload.userData;
+          state.error = action.payload.errors;
         }
       })
       .addCase(loginUser.fulfilled, (state, action) => {
@@ -111,7 +104,7 @@ export const userSlice = createSlice({
           state.auth = true;
           state.userData = action.payload.userData;
         } else {
-          state.error = action.payload.message;
+          state.error = action.payload.errors;
         }
       })
       .addCase(logOutUser.fulfilled, (state, action) => {

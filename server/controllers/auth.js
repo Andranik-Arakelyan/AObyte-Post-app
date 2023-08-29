@@ -10,9 +10,9 @@ export const signUp = (req, res, next) => {
   User.findOne({ email })
     .then((result) => {
       if (result) {
-        res.json({
+        return res.json({
           status: "FAILED",
-          message: "User with this email is already exists",
+          errors: { email: "User with this email already exists" },
         });
       } else {
         bcrypt.hash(password, 10).then((hashedPassword) => {
@@ -56,6 +56,12 @@ export const logIn = (req, res) => {
   User.findOne({ email })
     .then((user) => {
       if (user) {
+        if (!user.verified) {
+          return res.json({
+            status: "FAILED",
+            message: "You must verify your email before log in",
+          });
+        }
         const hashedPassword = user.password;
         bcrypt.compare(password, hashedPassword).then((result) => {
           if (result) {
@@ -63,14 +69,14 @@ export const logIn = (req, res) => {
           } else {
             res.json({
               status: "FAILED",
-              message: "Wrong password",
+              errors: { password: "Wrong password" },
             });
           }
         });
       } else {
         res.json({
           status: "FAILED",
-          message: "User doesn't exists",
+          errors: { email: "User with this email doesn't exists" },
         });
       }
     })

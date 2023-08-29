@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { fetchPosts, addNewComment, deleteCom } from "./postsApi";
+import { fetchPosts, addNewComment, deleteCom, addPost } from "./postsApi";
 import { sort } from "../../helpers";
 
 const initialState = {
@@ -16,6 +16,18 @@ export const downloadPosts = createAsyncThunk("posts/fetchPosts", async () => {
     throw new Error("Something went wrong fetching posts");
   }
 });
+
+export const addNewPost = createAsyncThunk(
+  "posts/addNewPost",
+  async (formData) => {
+    try {
+      const response = await addPost(formData);
+      return response.data;
+    } catch (err) {
+      throw new Error(err.message);
+    }
+  }
+);
 
 export const addComment = createAsyncThunk(
   "posts/addComment",
@@ -69,6 +81,7 @@ export const postsSlice = createSlice({
         state.loading = false;
         state.error = action.error.message;
       })
+
       .addCase(addComment.fulfilled, (state, action) => {
         const post = state.posts.find(
           (post) => post.id === action.payload.postId

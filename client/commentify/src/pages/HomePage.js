@@ -10,14 +10,13 @@ import { downloadPosts, selectPosts } from "../features/posts/postsSlice";
 import { getAddPostModalStatus } from "../features/addPostModal/addPostModalSlice";
 
 function HomePage(props) {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(downloadPosts());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(downloadPosts());
+  // }, [dispatch]);
 
   const loginModalOpen = useSelector(getLoginModalStatus);
-  const addModal = useSelector(getAddPostModalStatus);
   const { loading, error } = useSelector(selectPosts);
 
   if (loading) {
@@ -41,8 +40,7 @@ function HomePage(props) {
   return (
     <>
       {loginModalOpen && <Login />}
-      {addModal && <AddPost />}
-      <Header searchBar={true} />
+      <Header searchBar={true} addPostButton={true} />
       <Posts />
       {/* <Panel /> */}
     </>

@@ -3,44 +3,48 @@ import ReactDOM from "react-dom";
 
 import Card from "../../UI/Card";
 import { useNavigate } from "react-router-dom";
-import { SIGN_UP } from "../../constants/path";
+import { HOME_PAGE, SIGN_UP } from "../../constants/path";
 import { useDispatch } from "react-redux";
 import { closeModal } from "../../features/loginModal/loginModalSlice";
+import { loginUser } from "../../features/user/userSlice";
+import { useFormik } from "formik";
 
 import InButton from "../../UI/InButton";
 import { Backdrop } from "../../UI/Backdrop";
 import CloseIcon from "@mui/icons-material/Close";
 
 import classes from "./Login.module.css";
-import { loginUser } from "../../features/user/userSlice";
+import loginSchema from "../../Validation/login";
 
-const LoginModal = (props) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+export const LoginModal = ({ closeIcon }) => {
   const [submiting, setSubmiting] = useState(false);
   const navigate = useNavigate();
   const handleSignUpClick = () => navigate(SIGN_UP);
 
   const dispatch = useDispatch();
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-    setSubmiting(true);
-    const loginData = { email, password };
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validationSchema: loginSchema,
+    onSubmit: (values, { setFieldError }) => {
+      setSubmiting(true);
 
-    dispatch(loginUser(loginData)).then(() => {
-      setSubmiting(false);
-      dispatch(closeModal());
-    });
-  };
-
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
-
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
+      dispatch(loginUser(values)).then((response) => {
+        if (response.payload.status === "SUCCESS") {
+          dispatch(closeModal());
+          navigate(HOME_PAGE);
+        } else {
+          Object.entries(response.payload.errors).forEach((error) => {
+            setFieldError(error[0], error[1]);
+          });
+        }
+        setSubmiting(false);
+      });
+    },
+  });
 
   return (
     <Card modal="modal">
@@ -49,21 +53,29 @@ const LoginModal = (props) => {
           <p>
             Log Into Comment<span>i</span>fy
           </p>
-          <InButton onClick={() => dispatch(closeModal())}>
-            <CloseIcon />
-          </InButton>
+          {closeIcon && (
+            <InButton onClick={() => dispatch(closeModal())}>
+              <CloseIcon />
+            </InButton>
+          )}
         </div>
 
         <div className={classes.formSide}>
-          <form onSubmit={(e) => handleFormSubmit(e)}>
+          <form onSubmit={formik.handleSubmit}>
             <div>
               <label htmlFor="email">Email</label>
               <input
                 id="email"
                 type="email"
-                value={email}
-                onChange={(e) => handleEmailChange(e)}
+                value={formik.values.email}
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
               />
+              {formik.touched.email && formik.errors.email ? (
+                <div style={{ color: "rgb(231, 43, 43)" }}>
+                  {formik.errors.email}
+                </div>
+              ) : null}
             </div>
 
             <div>
@@ -71,9 +83,15 @@ const LoginModal = (props) => {
               <input
                 type="password"
                 id="password"
-                value={password}
-                onChange={(e) => handlePasswordChange(e)}
+                value={formik.values.password}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
               />
+              {formik.touched.password && formik.errors.password ? (
+                <div style={{ color: "rgb(231, 43, 43)" }}>
+                  {formik.errors.password}
+                </div>
+              ) : null}
             </div>
 
             <button type="submit">{submiting ? "Submiting" : "Log In"}</button>
@@ -103,7 +121,10 @@ function Login(props) {
         />,
         document.getElementById("back-drop")
       )}
-      {ReactDOM.createPortal(<LoginModal />, document.getElementById("modal"))}
+      {ReactDOM.createPortal(
+        <LoginModal closeIcon={true} />,
+        document.getElementById("modal")
+      )}
     </>
   );
 }

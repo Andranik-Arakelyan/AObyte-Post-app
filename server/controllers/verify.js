@@ -42,7 +42,10 @@ export const verifyEmail = (req, res) => {
                       .then(() => {
                         User.findOne({ _id: userId }).then((user) => {
                           console.log("UPDATED USER IS :", user);
-                          addTokens(userId, res, user);
+                          res.json({
+                            status: "SUCCESS",
+                            message: "Verified successfully",
+                          });
                         });
                       })
                       .catch((err) => {

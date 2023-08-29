@@ -10,10 +10,17 @@ import { openModal as openAddModal } from "../../features/addPostModal/addPostMo
 
 import { Avatar, Button, List, ListItem } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import Divider from "@mui/material/Divider";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-import { HOME_PAGE, PROFILE_PAGE, SIGN_UP } from "../../constants/path";
+import {
+  ADD_POST,
+  HOME_PAGE,
+  MY_POSTS_PAGE,
+  PROFILE_PAGE,
+  SIGN_UP,
+} from "../../constants/path";
 
 import logo from "../../assets/Commentify.png";
 
@@ -26,13 +33,13 @@ const addPostStyle = {
   backgroundColor: "#FE6257",
 };
 
-const loginStyle = {
+export const loginStyle = {
   color: "#131032",
   fontWeight: 700,
   border: "2px solid #131032",
 };
 
-function Header({ searchBar }) {
+function Header({ searchBar, addPostButton }) {
   useEffect(() => {
     const handleScroll = () => {
       const shouldHaveBoxShadow = window.scrollY > 60;
@@ -47,11 +54,10 @@ function Header({ searchBar }) {
   }, []);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const searchValue = useSelector(getSearchValue);
   const user = useSelector(getUser);
-
-  console.log(user.auth);
 
   const [boxShadow, setBoxShadow] = useState(false);
   const [dropDown, setDropDown] = useState(false);
@@ -62,21 +68,20 @@ function Header({ searchBar }) {
 
   const handleLogOut = () => {
     dispatch(logOutUser()).then(() => {
-      // window.location.reload();
+      navigate(HOME_PAGE);
     });
   };
 
   const renderIfUserExists = (auth) => {
     return auth ? (
       <div className={classes.logedIn}>
-        <Button
-          style={addPostStyle}
-          variant="contained"
-          color="success"
-          onClick={handleAddPostButtonClick}
-        >
-          Add a new Post
-        </Button>
+        {addPostButton && (
+          <Link to={ADD_POST}>
+            <Button style={addPostStyle} variant="contained" color="success">
+              Add a new Post
+            </Button>
+          </Link>
+        )}
         <div className={classes.dropDown}>
           <Button className={classes.dropDownButton} onClick={handleDropDown}>
             <div className={classes.user}>
@@ -89,9 +94,14 @@ function Header({ searchBar }) {
               dropDown ? classes.dropDownContentBlock : ""
             }`}
           >
-            <ListItem>
-              <Link to={PROFILE_PAGE}>My profile</Link>
-            </ListItem>
+            <Link to={PROFILE_PAGE}>
+              <ListItem>My profile</ListItem>
+            </Link>
+            <Divider />
+            <Link to={MY_POSTS_PAGE}>
+              <ListItem>My posts</ListItem>
+            </Link>
+            <Divider />
             <ListItem onClick={handleLogOut}>
               <span>Log Out</span>
             </ListItem>

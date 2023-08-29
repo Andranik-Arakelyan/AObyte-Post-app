@@ -11,12 +11,12 @@ export const addTokens = (id, res, user) => {
   });
 
   res.cookie("accessToken", accessToken, {
-    maxAge: 7 * 24 * 360 * 1000,
+    maxAge: 7 * 24 * 3600 * 1000,
     httpOnly: true,
   });
 
   res.cookie("refreshToken", refreshToken, {
-    maxAge: 7 * 24 * 360 * 1000,
+    maxAge: 7 * 24 * 3600 * 1000,
   });
 
   console.log(

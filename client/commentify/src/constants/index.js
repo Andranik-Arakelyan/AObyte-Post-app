@@ -30,3 +30,21 @@ export const RIGHT_POSTS = "rightPosts";
 export const LEFT_POSTS = "leftPosts";
 export const DESCENDING = "descending";
 export const ASCENDING = "ascending";
+
+export const categories = [
+  "General",
+  "Technology",
+  "Travel",
+  "Food and Cooking",
+  "Health and Fitness",
+  "Science",
+  "Fashion",
+  "Sports",
+  "Books and Literature",
+  "Music",
+  "Politics",
+  "History",
+];
+
+export const NO_IMAGE_URL =
+  "https://storage.googleapis.com/commentify-8218e.appspot.com/images/no-image.jpg";

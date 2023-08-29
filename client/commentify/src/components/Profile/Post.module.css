@@ -1,0 +1,49 @@
+.postContent {
+  display: flex;
+  width: 100%;
+  height: 30vh;
+  box-sizing: border-box;
+  padding: 24px;
+  transition: all 0.3s;
+  text-decoration: none;
+  font-size: 18px;
+  color: #131032;
+}
+
+.postContent:hover {
+  background-color: #fbfbfb;
+}
+
+.imageContainer {
+  width: 35%;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-right: 15px;
+}
+
+.imageContainer svg {
+  font-size: 120px;
+}
+.postImage {
+  width: 100%;
+  height: 100%;
+}
+
+.infoContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: start;
+  margin-left: 24px;
+  width: 75%;
+}
+
+.infoContainer h3 {
+  font-size: 24px;
+  margin-top: 0;
+}
+
+.infoContainer span {
+  font-size: 16px;
+  color: #a2a2ab;
+}
