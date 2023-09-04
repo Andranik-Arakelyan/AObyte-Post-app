@@ -1,25 +1,58 @@
-import React from "react";
-import {
-  Form,
-  useActionData,
-  useNavigate,
-  useNavigation,
-} from "react-router-dom";
-import classes from "./SignupForm.module.css";
-import logo from "../../assets/Commentify.png";
-import { HOME_PAGE } from "../../constants/path";
+import React, { useState } from "react";
+
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useFormik } from "formik";
+
+import { addUser } from "../../features/user/userSlice";
+
 import InButton from "../../UI/InButton";
 
+import signupSchema from "../../Validation/signup";
+
+import { HOME_PAGE, VERIFICATION } from "../../constants/path";
+
+import logo from "../../assets/Commentify.png";
+
+import classes from "./SignupForm.module.css";
+
 function SignupForm(props) {
-  const data = useActionData();
-  const navigation = useNavigation();
   const navigate = useNavigate();
+
+  const [submiting, setSubmitting] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      dateOfBirth: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+    validationSchema: signupSchema,
+    onSubmit: (values, { setFieldError }) => {
+      setSubmitting(true);
+
+      dispatch(addUser(values)).then((response) => {
+        if (response.payload.status === "SUCCESS") {
+          navigate(VERIFICATION, { state: { fromSignUpPage: true } });
+        } else {
+          Object.entries(response.payload.errors).forEach((error) => {
+            setFieldError(error[0], error[1]);
+          });
+        }
+        setSubmitting(false);
+      });
+    },
+  });
+
+  // console.log(formik.errors);
 
   const goToHomePage = () => {
     navigate(HOME_PAGE);
   };
-
-  const isSubmitting = navigation.state === "submitting";
 
   return (
     <div className={classes.container}>
@@ -30,36 +63,100 @@ function SignupForm(props) {
       <div className={classes.formPart}>
         <h2>It's easy to join us</h2>
 
-        {data && data.errors && (
-          <ul>
-            {Object.values(data.errors).map((err) => (
-              <li key={err}>{err}</li>
-            ))}
-          </ul>
-        )}
-        {data && data.message && <p>{data.message}</p>}
+        <form onSubmit={formik.handleSubmit}>
+          <div className={classes.singleInput}>
+            <label htmlFor="name">Name</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={formik.values.name}
+              required
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+            {formik.touched.name && formik.errors.name ? (
+              <div style={{ color: "red" }}>{formik.errors.name}</div>
+            ) : null}
+          </div>
 
-        <Form method="post">
           <div className={classes.singleInput}>
-            <label htmlFor="firstName">First Name</label>
-            <input type="text" id="firstName" name="firstName" required />
+            <label htmlFor="dateOfBirth">Date of Birth</label>
+            <input
+              type="date"
+              id="dateOfBirth"
+              name="dateOfBirth"
+              value={formik.values.dateOfBirth}
+              required
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+            {formik.touched.dateOfBirth && formik.errors.dateOfBirth ? (
+              <div style={{ color: "red" }}>{formik.errors.dateOfBirth}</div>
+            ) : null}
           </div>
-          <div className={classes.singleInput}>
-            <label htmlFor="lastName">Last Name</label>
-            <input type="text" id="lastName" name="lastName" required />
-          </div>
+
           <div className={classes.singleInput}>
             <label htmlFor="email">Email</label>
-            <input type="email" id="email" name="email" required />
+            <input
+              autoComplete="username"
+              type="email"
+              id="email"
+              name="email"
+              value={formik.values.email}
+              required
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+            {formik.touched.email && formik.errors.email ? (
+              <div style={{ color: "rgb(231, 43, 43)" }}>
+                {formik.errors.email}
+              </div>
+            ) : null}
           </div>
+
           <div className={classes.singleInput}>
             <label htmlFor="password">Password</label>
-            <input type="password" id="password" name="password" required />
+            <input
+              autoComplete="new-password"
+              type="password"
+              id="password"
+              name="password"
+              value={formik.values.password}
+              required
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+            />
+            {formik.touched.password && formik.errors.password ? (
+              <div style={{ color: "rgb(231, 43, 43)" }}>
+                {formik.errors.password}
+              </div>
+            ) : null}
           </div>
-          <button disabled={isSubmitting}>
-            {isSubmitting ? "Submiting" : "Sign up"}
+
+          <div className={classes.singleInput}>
+            <label htmlFor="confirmPassword">Confirm password</label>
+            <input
+              autoComplete="new-password"
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              value={formik.values.confirmPassword}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              required
+            />
+            {formik.touched.confirmPassword && formik.errors.confirmPassword ? (
+              <div style={{ color: "rgb(231, 43, 43)" }}>
+                {formik.errors.confirmPassword}
+              </div>
+            ) : null}
+          </div>
+
+          <button type="submit" disabled={submiting}>
+            {submiting ? "Submiting" : "Sign up"}
           </button>
-        </Form>
+        </form>
       </div>
     </div>
   );

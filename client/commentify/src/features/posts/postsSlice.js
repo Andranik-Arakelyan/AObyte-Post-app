@@ -1,21 +1,39 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { fetchPosts, addNewComment, deleteCom } from "./postsApi";
+import { fetchPosts, addNewComment, deleteCom, addPost } from "./postsApi";
 import { sort } from "../../helpers";
 
 const initialState = {
   posts: [],
-  loading: false,
+  totalPages: 1,
+  fetching: true,
   error: null,
+  page: 1,
+  filters: {},
 };
 
-export const downloadPosts = createAsyncThunk("posts/fetchPosts", async () => {
-  try {
-    const response = await fetchPosts();
-    return response.data;
-  } catch (error) {
-    throw new Error("Something went wrong fetching posts");
+export const downloadPosts = createAsyncThunk(
+  "posts/fetchPosts",
+  async (filters) => {
+    try {
+      const response = await fetchPosts(filters);
+      return response;
+    } catch (error) {
+      throw new Error("Something went wrong fetching posts");
+    }
   }
-});
+);
+
+export const addNewPost = createAsyncThunk(
+  "posts/addNewPost",
+  async (formData) => {
+    try {
+      const response = await addPost(formData);
+      return response;
+    } catch (err) {
+      throw new Error(err.message);
+    }
+  }
+);
 
 export const addComment = createAsyncThunk(
   "posts/addComment",
@@ -48,26 +66,28 @@ export const postsSlice = createSlice({
   name: "posts",
   initialState,
   reducers: {
-    sortComments: (state, action) => {
-      const post = state.posts.find(
-        (post) => post.id === action.payload.postId
-      );
-      post.comments = sort(post.comments, action.payload.dir, "rating");
+    changePage: (state, action) => {
+      state.page = action.payload;
+      state.fetching = true;
+    },
+
+    setFilters: (state, action) => {
+      state.filters = action.payload;
+      state.page = 1;
+      state.fetching = true;
     },
   },
 
   extraReducers: (builder) => {
     builder
-      .addCase(downloadPosts.pending, (state) => {
-        state.loading = true;
-      })
       .addCase(downloadPosts.fulfilled, (state, action) => {
-        state.loading = false;
-        state.posts = action.payload;
-      })
-      .addCase(downloadPosts.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message;
+        if (action.payload.status === "SUCCESS") {
+          state.totalPages = action.payload.totalPages;
+          state.fetching = false;
+          state.posts = action.payload.posts;
+        } else {
+          state.error = action.payload.error;
+        }
       })
       .addCase(addComment.fulfilled, (state, action) => {
         const post = state.posts.find(
@@ -91,7 +111,8 @@ export const postsSlice = createSlice({
 });
 
 export const selectPosts = (state) => state.posts;
+export const getFilters = (state) => state.filters;
 
-export const { sortComments } = postsSlice.actions;
+export const { sortComments, changePage, setFilters } = postsSlice.actions;
 
 export default postsSlice.reducer;

@@ -1,37 +1,86 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { Post } from "../../components";
+import { useLocation, useNavigate } from "react-router-dom";
+
+import { useDispatch, useSelector } from "react-redux";
+import {
+  downloadPosts,
+  selectPosts,
+  changePage,
+} from "../../features/posts/postsSlice";
+
 import Pagination from "@mui/material/Pagination";
+import { CircularProgress } from "@mui/material";
+
+import PostCard from "../PostCard/PostCard";
+import Header from "../Header/Header";
+import NoPost from "./NoPost";
+
+import { HOME_PAGE } from "../../constants/path";
 
 import classes from "./Posts.module.css";
-import { useSelector } from "react-redux";
-import { getSearchValue } from "../../features/search/searchSlice";
-import { selectPosts } from "../../features/posts/postsSlice";
 
 function Posts(props) {
-  const [currentPage, setCurrentPage] = useState(1);
+  const dispatch = useDispatch();
+  const { posts, fetching, totalPages, error, page, filters } =
+    useSelector(selectPosts);
 
-  const postEachPage = 3;
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
 
-  const searchValue = useSelector(getSearchValue);
+  const currentPage = parseInt(queryParams.get("page")) || 1;
 
-  const { posts } = useSelector(selectPosts);
+  const postFilters = {};
 
-  const filteredPosts = useMemo(() => {
-    return posts.filter((post) => {
-      return post.title.toLowerCase().includes(searchValue.toLowerCase());
-    });
-  }, [searchValue, posts]);
+  Array.from(queryParams.entries()).map(([key, value]) => {
+    if (key !== "page") {
+      postFilters[key] = value;
+    }
+  });
 
-  const drawPosts = (posts) => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    try {
+      dispatch(downloadPosts({ page: currentPage, filters: postFilters }));
+    } catch (error) {
+      console.log(error);
+    }
+  }, [page, filters]);
+
+  if (fetching) {
+    return (
+      <>
+        <Header searchBar={true} addPostButton={true} />
+        <div style={{ marginTop: "80px" }}>
+          <CircularProgress />
+        </div>
+      </>
+    );
+  }
+
+  if (error) {
+    return (
+      <>
+        <Header />
+        <p>{error}</p>
+      </>
+    );
+  }
+
+  const drawPosts = () => {
     return posts.map((post) => {
-      return <Post key={post.id} post={post} />;
+      return <PostCard key={post._id} postData={post} />;
     });
   };
 
-  const changePage = (e, pageNumber) => {
-    if (pageNumber !== currentPage) {
-      setCurrentPage(pageNumber);
+  const changePageNumber = (e, pageNumber) => {
+    if (pageNumber !== page) {
+      queryParams.set("page", pageNumber);
+
+      navigate(`${HOME_PAGE}?${queryParams.toString()}`);
+
+      dispatch(changePage(pageNumber));
     }
   };
 
@@ -41,26 +90,18 @@ function Posts(props) {
         sx={{ display: "flex", justifyContent: "center" }}
         count={n}
         page={currentPage}
-        onChange={changePage}
+        onChange={changePageNumber}
       />
     );
   };
 
-  const totalPages = Math.ceil(posts.length / postEachPage);
-  const showedPosts = posts.slice(
-    (currentPage - 1) * postEachPage,
-    currentPage * postEachPage
-  );
-
-  return (
+  return !fetching && posts.length ? (
     <section className={classes.container}>
-      <ul className={classes.posts}>
-        {searchValue.trim() ? drawPosts(filteredPosts) : drawPosts(showedPosts)}
-      </ul>
-      {!searchValue.trim() && (
-        <ul style={{ marginTop: "40px" }}>{drawPagination(totalPages)}</ul>
-      )}
+      <ul className={classes.posts}>{drawPosts()}</ul>
+      {drawPagination(totalPages)}
     </section>
+  ) : (
+    <NoPost />
   );
 }
 

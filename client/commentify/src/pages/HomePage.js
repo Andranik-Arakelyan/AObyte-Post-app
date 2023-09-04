@@ -1,51 +1,27 @@
-import React, { useEffect } from "react";
+import React from "react";
 
-import CircularProgress from "@mui/material/CircularProgress";
+import { Header, Posts, Login, Filters, Footer } from "../components";
 
-import { Header, Posts, Login, AddPost } from "../components";
-
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { getLoginModalStatus } from "../features/loginModal/loginModalSlice";
-import { downloadPosts, selectPosts } from "../features/posts/postsSlice";
-import { getAddPostModalStatus } from "../features/addPostModal/addPostModalSlice";
+
+import classes from "../components/Posts/Posts.module.css";
 
 function HomePage(props) {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(downloadPosts());
-  }, [dispatch]);
-
   const loginModalOpen = useSelector(getLoginModalStatus);
-  const addModal = useSelector(getAddPostModalStatus);
-  const { loading, error } = useSelector(selectPosts);
-
-  if (loading) {
-    return (
-      <>
-        <Header searchBar={true} />
-        <CircularProgress />
-      </>
-    );
-  }
-
-  if (error) {
-    return (
-      <>
-        <Header />
-        <p>{error}</p>
-      </>
-    );
-  }
 
   return (
-    <>
+    <div className="container">
       {loginModalOpen && <Login />}
-      {addModal && <AddPost />}
-      <Header searchBar={true} />
-      <Posts />
-      {/* <Panel /> */}
-    </>
+      <Header searchBar={true} addPostButton={true} />
+      <div className={classes.main}>
+        <div className={classes.filter}>
+          <Filters />
+        </div>
+        <Posts />
+      </div>
+      <Footer />
+    </div>
   );
 }
 
