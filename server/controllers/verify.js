@@ -2,25 +2,24 @@ import User from "../models/User.js";
 import UserVerification from "../models/UserVerification.js";
 import bcrypt from "bcrypt";
 import { addTokens } from "../util/addTokens.js";
+import { sendVerificationEmail } from "../util/verifyEmail.js";
 
 export const verifyEmail = (req, res) => {
   let { userId, uniqueString } = req.params;
-  console.log(`MTAV VERIFY CONTROLLER ${userId}ov u ${uniqueString}ov`);
   UserVerification.findOne({ userId })
     .then((result) => {
       if (result) {
-        const {
-          expiresAt,
-          createdAt,
-          uniqueString: hashedUniqueString,
-        } = result;
-        if (createdAt + expiresAt < Date.now()) {
+        const { expiresAt, uniqueString: hashedUniqueString } = result;
+        if (expiresAt < Date.now()) {
+          console.log("RESENDING");
           UserVerification.deleteOne({ userId })
             .then((result) => {
-              res.json({
-                status: "FAILED",
-                message:
-                  "That link you clicked is not valid enymore, we will send new link to your email",
+              User.findById(userId).then((user) => {
+                sendVerificationEmail(
+                  { _id: userId, email: user.email },
+                  res,
+                  true
+                );
               });
             })
             .catch(() => {
@@ -36,13 +35,13 @@ export const verifyEmail = (req, res) => {
               if (result) {
                 User.updateOne({ _id: userId }, { $set: { verified: true } })
                   .then((result) => {
-                    console.log("User verify status updated");
-
                     UserVerification.deleteOne({ userId })
                       .then(() => {
                         User.findOne({ _id: userId }).then((user) => {
-                          console.log("UPDATED USER IS :", user);
-                          addTokens(userId, res, user);
+                          res.json({
+                            status: "SUCCESS",
+                            message: "Verified successfully",
+                          });
                         });
                       })
                       .catch((err) => {
@@ -80,7 +79,7 @@ export const verifyEmail = (req, res) => {
       }
     })
     .catch((err) => {
-      console.log(err);
+      console.log(err.message);
       res.json({
         status: "FAILED",
         message: "Failed to check verification existance",

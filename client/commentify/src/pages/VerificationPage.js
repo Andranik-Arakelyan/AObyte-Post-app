@@ -1,37 +1,82 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { checkUser, getUser, verifyUser } from "../features/user/userSlice";
-import { useLocation } from "react-router-dom";
+import { getUser, verifyUser } from "../features/user/userSlice";
+
+import { Button } from "@mui/material";
+
+import { HOME_PAGE, LOGIN_PAGE } from "../constants/path";
+import { loginStyle } from "../constants";
 
 function VerificationPage(props) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const user = useSelector(getUser);
 
-  console.log("USERSTATE :", user);
+  const [response, setResponse] = useState(null);
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const userId = queryParams.get("id");
   const uniqueString = queryParams.get("uniqueString");
 
-  useEffect(() => {
-    if (userId && uniqueString) {
-      dispatch(verifyUser({ userId, uniqueString }));
-    }
-  }, [dispatch, userId, uniqueString]);
+  const fromSignup = location.state && location.state.fromSignUpPage;
 
   useEffect(() => {
-    dispatch(checkUser());
-  }, [dispatch]);
+    if (!fromSignup && (!userId || !uniqueString)) {
+      return navigate(HOME_PAGE);
+    }
+
+    if (userId && uniqueString) {
+      dispatch(verifyUser({ userId, uniqueString })).then((response) => {
+        setResponse(response.payload);
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (user.auth && !user.fetching) {
+      navigate(HOME_PAGE);
+    }
+  });
+
+  if (response) {
+    if (response.status === "FAILED") {
+      return (
+        <div>
+          <h1>{response.message}</h1>
+        </div>
+      );
+    } else if (response.status === "SUCCESS") {
+      return (
+        <div>
+          <h1>{response.message}</h1>
+          <Button
+            style={loginStyle}
+            variant="outlined"
+            onClick={() => navigate(LOGIN_PAGE)}
+          >
+            Log in
+          </Button>
+        </div>
+      );
+    }
+  }
 
   return (
-    <div>
-      {user.auth ? (
-        <h1>You have successfully verified</h1>
-      ) : (
-        <h1>We sent you verification link to your email, please check inbox</h1>
-      )}
-    </div>
+    (fromSignup || (userId && uniqueString)) && (
+      <>
+        {!userId && !uniqueString && (
+          <div>
+            <h1>
+              We sent you verification link to your email, please check inbox
+            </h1>
+            <p>Please open the link within 12 hours</p>
+          </div>
+        )}
+      </>
+    )
   );
 }
 

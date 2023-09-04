@@ -1,0 +1,207 @@
+.postContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 55%;
+  box-shadow: 0 0 4px #c9c1c1;
+  border-radius: 10px;
+}
+
+.postHeader {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+  padding: 14px 25px 10px 15px;
+}
+
+.creator {
+  display: flex;
+  align-items: center;
+  margin-right: 25px;
+  gap: 10px;
+}
+
+.creator span {
+  text-align: left;
+}
+
+.title {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  text-align: left;
+}
+
+.title a {
+  text-decoration: none;
+  color: #131032;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0;
+  transition: all 0.3s;
+}
+
+.title a:hover {
+  color: #fe6257;
+}
+
+.title span {
+  color: #7c7c7c;
+  font-size: 16px;
+}
+
+.postImage {
+  overflow: hidden;
+  width: 100%;
+}
+
+.postImage img {
+  width: 100%;
+  height: 65vh;
+}
+
+.postDescription {
+  width: 100%;
+  text-align: left;
+  padding: 0 20px;
+  color: #7c7c7c;
+  font-size: 18px;
+}
+
+.expanded {
+  max-height: none;
+  transition: max-height 0.4s ease-in-out, opacity 0.2s;
+}
+
+.postDescription span {
+  color: #131032;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.postDescription span:hover {
+  color: #fe6257;
+}
+
+.postActions {
+  display: flex;
+  width: 90%;
+  justify-content: space-between;
+  align-items: center;
+  margin: 12px auto 24px;
+}
+
+.action {
+  display: flex;
+  border-radius: 15px;
+  padding: 5px 10px;
+  text-decoration: none;
+  align-items: center;
+  gap: 5px;
+  font-size: 18px;
+  color: #7c7c7c;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.action:hover {
+  box-shadow: 0 0 2px #7c7c7c;
+}
+
+.liked svg {
+  color: #fe6257;
+}
+
+@media (max-width: 1000px) {
+  .postContainer {
+    width: 65%;
+    font-size: 14px;
+  }
+  .postHeader {
+    padding: 10px 10px 10px 9px;
+  }
+
+  .title a {
+    font-size: 22px;
+  }
+  .title span {
+    font-size: 14px;
+  }
+
+  .postDescription {
+    font-size: 16px;
+  }
+
+  .postDescription span {
+    font-size: 16px;
+  }
+  .action {
+    font-size: 16px;
+  }
+  .action svg {
+    width: 25px;
+  }
+}
+
+@media (max-width: 780px) {
+  .postContainer {
+    width: 80%;
+    font-size: 12px;
+  }
+  .postHeader {
+    padding: 8px 8px 10px 8px;
+  }
+
+  .title a {
+    font-size: 20px;
+  }
+  .title span {
+    font-size: 12px;
+  }
+
+  .postDescription {
+    font-size: 14px;
+  }
+
+  .postDescription span {
+    font-size: 14px;
+  }
+
+  .action {
+    font-size: 14px;
+  }
+  .action svg {
+    width: 20px;
+  }
+}
+
+@media (max-width: 580px) {
+  .postContainer {
+    width: 90%;
+    font-size: 10px;
+  }
+
+  .title a {
+    font-size: 18px;
+  }
+  .title span {
+    font-size: 10px;
+  }
+
+  .postDescription {
+    font-size: 12px;
+  }
+
+  .postDescription span {
+    font-size: 12px;
+  }
+  .action {
+    font-size: 12px;
+  }
+  .action svg {
+    width: 18px;
+  }
+}

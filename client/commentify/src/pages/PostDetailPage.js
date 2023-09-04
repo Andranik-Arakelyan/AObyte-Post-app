@@ -1,42 +1,21 @@
-// import React, { useEffect, useState } from "react";
-// import { Header, Login } from "../components";
-// import { fetchPostDetails } from "../api/api";
-// import { useParams } from "react-router-dom";
-// import { PostDetail } from "../components";
-// import { useSelector } from "react-redux";
-// import { getLoginModalStatus } from "../features/loginModalSlice";
+import React from "react";
 
-// function PostDetailPage(props) {
-//   const { postId } = useParams();
-//   const [loading, setLoading] = useState(true);
-//   const [postInfo, setPostInfo] = useState(null);
+import { useSelector } from "react-redux";
+import { getLoginModalStatus } from "../features/loginModal/loginModalSlice";
 
-//   const loginModal = useSelector(getLoginModalStatus);
+import { Header, Login, Footer, PostDetail } from "../components";
 
-//   useEffect(() => {
-//     fetchPostDetails(postId)
-//       .then((response) => {
-//         setPostInfo(response.data);
-//         setLoading(false);
-//       })
-//       .catch((error) => console.log(error));
-//   }, [postId]);
+function PostDetailPage(props) {
+  const loginModal = useSelector(getLoginModalStatus);
 
-//   return (
-//     <>
-//       <Header />
-//       {loginModal && <Login />}
-//       {!loading && (
-//         <PostDetail
-//           title={postInfo.title}
-//           description={postInfo.description}
-//           comments={postInfo.comments}
-//           imageUrl={postInfo.imageUrl}
-//           id={postInfo.id}
-//         />
-//       )}
-//     </>
-//   );
-// }
+  return (
+    <div className="container">
+      <Header searchBar={true} addPostButton={true} />
+      {loginModal && <Login />}
+      {<PostDetail />}
+      <Footer />
+    </div>
+  );
+}
 
-// export default PostDetailPage;
+export default PostDetailPage;

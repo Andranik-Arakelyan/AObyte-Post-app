@@ -12,12 +12,6 @@
   margin-top: 6px;
 }
 
-.disabled {
-  background-color: #fffffed0;
-  color: rgba(0, 0, 0, 0.5);
-  pointer-events: none;
-}
-
 .modal {
   position: fixed;
   top: 20vh;

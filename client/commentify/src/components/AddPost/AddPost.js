@@ -1,41 +1,64 @@
-// import { addPostWithImage } from "../api/api";
 import React, { useState } from "react";
-import ReactDOM from "react-dom";
 
-import InButton from "../../UI/InButton";
-import CloseIcon from "@mui/icons-material/Close";
-import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
-import Avatar from "@mui/material/Avatar";
-import Next from "@mui/icons-material/ArrowForwardIos";
-import Previous from "@mui/icons-material/ArrowBack";
+import { useDispatch, useSelector } from "react-redux";
+import { getUser } from "../../features/user/userSlice";
+import { addNewPost } from "../../features/posts/postsSlice";
 
+import postSchema from "../../Validation/newPost";
+import Page1 from "./Page1";
+import Page2 from "./Page2";
+import Page4 from "./Page4";
+import Page3 from "./Page3";
+import Pagination from "./Pagination";
+
+import { useNavigate } from "react-router-dom";
+import { useFormik } from "formik";
+
+import { PROFILE_PAGE } from "../../constants/path";
+
+import UserAvatar from "../UserAvatar/UserAvatar";
 import classes from "./AddPost.module.css";
-import Card from "../../UI/Card";
-import { Backdrop } from "../../UI/Backdrop";
-import { useDispatch } from "react-redux";
-import { closeModal } from "../../features/addPostModal/addPostModalSlice";
-import { getRandomAvatar } from "../../helpers";
-import { addPost } from "../../features/user/userSlice";
 
-const AddPostModal = () => {
+export const AddPost = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [uploaded, setUploaded] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const user = useSelector(getUser);
 
-    const uploadingFiles = {
-      title,
-      description,
-      image: uploaded,
-    };
+  const formik = useFormik({
+    initialValues: {
+      title: "",
+      description: "",
+      category: "general",
+      uploadedPhoto: "",
+      isPublic: false,
+    },
+    validationSchema: postSchema,
+    onSubmit: (values, { setFieldError }) => {
+      setSubmitting(true);
+      const formData = new FormData();
+      formData.append("title", values.title);
+      formData.append("description", values.description);
+      formData.append("category", values.category);
+      formData.append("uploadedPhoto", values.uploadedPhoto);
+      formData.append("isPublic", values.isPublic);
 
-    dispatch(addPost(uploadingFiles));
-  };
+      dispatch(addNewPost(formData)).then((response) => {
+        if (response.payload.status === "SUCCESS") {
+          navigate(PROFILE_PAGE);
+        } else {
+          Object.entries(response.payload.errors).forEach((error) => {
+            setFieldError(error[0], error[1]);
+          });
+        }
+
+        setSubmitting(false);
+      });
+    },
+  });
 
   const toNextPage = () => {
     setCurrentPage((prevPage) => prevPage + 1);
@@ -48,108 +71,49 @@ const AddPostModal = () => {
   const renderPageContent = () => {
     switch (currentPage) {
       case 1:
-        return (
-          <div>
-            <input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="Your post title"
-            />
-          </div>
-        );
+        return <Page1 formik={formik} />;
       case 2:
-        return (
-          <div>
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Describe your post, what's it about?"
-            />
-          </div>
-        );
+        return <Page2 formik={formik} />;
       case 3:
-        return (
-          <div className={classes.uploadContainer}>
-            <h3>Upload a cover photo</h3>
-            <label className={classes.fileLabel} htmlFor="upload">
-              <AddAPhotoIcon />
-            </label>
-            <input
-              id="upload"
-              type="file"
-              className={classes.fileInput}
-              onChange={(e) => setUploaded(e.target.files[0])}
-            />
-          </div>
-        );
+        return <Page3 formik={formik} />;
+      case 4:
+        return <Page4 formik={formik} />;
       default:
         return null;
     }
   };
+
   return (
-    <Card modal="modal">
+    <div className={classes.main}>
       <div className={classes.container}>
-        <div className={classes.topSide}>
+        <div className={classes.titleSide}>
           <h2>
             <span>Create Post</span>
           </h2>
-          <div className={classes.close}>
-            <InButton onClick={() => dispatch(closeModal())}>
-              <CloseIcon />
-            </InButton>
-          </div>
         </div>
+
         <div className={classes.profileInfo}>
-          <Avatar src={getRandomAvatar()} alt="ava" />
-          <span>Name Surname</span>
+          <UserAvatar userData={user.userData} />
+          <span>{user.userData.name}</span>
         </div>
-        <form onSubmit={(e) => handleSubmit(e)} className={classes.formPart}>
-          {renderPageContent()}
-          <div className={classes.pages}>
-            {currentPage > 1 && (
-              <InButton type="button" onClick={toPrevPage}>
-                <Previous />
-                <span>Previous</span>
-              </InButton>
-            )}
-            {currentPage < 3 && (
-              <InButton type="button" onClick={toNextPage}>
-                <span>Next</span>
-                <Next />
-              </InButton>
-            )}
-            {currentPage === 3 && (
-              <button className={classes.submitBtn} type="submit">
-                Submit
-              </button>
-            )}
-          </div>
-        </form>
+
+        <div className={classes.formSide}>
+          <form>{renderPageContent()}</form>
+        </div>
+
+        <div className={classes.paginationSide}>
+          <Pagination
+            handleSubmit={formik.handleSubmit}
+            errors={formik.errors}
+            submitting={submitting}
+            currentPage={currentPage}
+            toNextPage={toNextPage}
+            toPrevPage={toPrevPage}
+          />
+        </div>
       </div>
-    </Card>
+    </div>
   );
 };
-
-function AddPost(props) {
-  const dispatch = useDispatch();
-
-  return (
-    <>
-      {ReactDOM.createPortal(
-        <Backdrop
-          onClose={() => {
-            dispatch(closeModal());
-          }}
-        />,
-        document.getElementById("back-drop")
-      )}
-      {ReactDOM.createPortal(
-        <AddPostModal />,
-        document.getElementById("modal")
-      )}
-    </>
-  );
-}
 
 export default AddPost;

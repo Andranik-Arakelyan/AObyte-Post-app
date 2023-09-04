@@ -5,3 +5,5 @@ export const PAGE_DETAIL = "/posts/:postId";
 export const ADD_POST = "/addPost";
 export const VERIFICATION = "/verification";
 export const PROFILE_PAGE = "/profile";
+export const MY_POSTS_PAGE = "/my-posts";
+export const LOGIN_PAGE = "/login";

@@ -7,6 +7,7 @@ import {
   login,
   verify,
 } from "./userApi";
+import { deleteCookie, getCookie } from "../../helpers/cookies";
 
 const initialState = {
   auth: false,
@@ -17,7 +18,7 @@ const initialState = {
 
 export const checkUser = createAsyncThunk("user/checkUser", async () => {
   const response = await checkUserExistance();
-  return response.data;
+  return response;
 });
 
 export const addUser = createAsyncThunk("user/addUser", async (formData) => {
@@ -42,7 +43,6 @@ export const logOutUser = createAsyncThunk("user/logOutUser", async () => {
 export const verifyUser = createAsyncThunk(
   "user/verifyUser",
   async ({ userId, uniqueString }) => {
-    console.log(`Thunk kanchvec ${userId} ov u ${uniqueString}ov`);
     const response = await verify(userId, uniqueString);
 
     return response.data;
@@ -62,24 +62,23 @@ export const addPost = createAsyncThunk("posts/addPost", async (postData) => {
 export const userSlice = createSlice({
   name: "user",
   initialState,
-  reducers: {},
+  reducers: {
+    addFavorite: (state, action) => {
+      if (state.userData.favorites.includes(action.payload)) {
+        const newFavorites = state.userData.favorites.filter(
+          (fav) => fav !== action.payload
+        );
+        state.userData.favorites = newFavorites;
+      } else {
+        state.userData.favorites.push(action.payload);
+      }
+    },
+  },
 
   extraReducers: (builder) => {
     builder
-      // .addCase(addPost.pending, (state) => {
-      //   state.postSubmitting = true;
-      // })
-      // .addCase(addPost.fulfilled, (state) => {
-      //   state.sending = false;
-      //   // here must be logic to add created post to users state.posts
-      // })
-      // .addCase(addPost.rejected, (state, action) => {
-      //   state.sending = false;
-      //   state.error = action.error.message;
-      // });
       .addCase(checkUser.fulfilled, (state, action) => {
         state.fetching = false;
-
         if (
           action.payload.status !== "NO TOKEN" &&
           action.payload.status !== "FAILED"
@@ -95,23 +94,22 @@ export const userSlice = createSlice({
       })
       .addCase(addUser.fulfilled, (state, action) => {
         if (action.payload.status === "FAILED") {
-          state.error = action.payload.message;
-        }
-      })
-      .addCase(verifyUser.fulfilled, (state, action) => {
-        if (action.payload.status === "SUCCESS") {
-          state.error = null;
-          state.auth = true;
-          state.userData = action.payload.userData;
+          state.error = action.payload.errors;
         }
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         if (action.payload.status === "SUCCESS") {
+          const refreshToken = getCookie("refreshToken");
+          localStorage.setItem("refreshToken", refreshToken);
+
+          deleteCookie("refreshToken");
+
           state.error = null;
+
           state.auth = true;
           state.userData = action.payload.userData;
         } else {
-          state.error = action.payload.message;
+          state.error = action.payload.errors;
         }
       })
       .addCase(logOutUser.fulfilled, (state, action) => {
@@ -124,5 +122,7 @@ export const userSlice = createSlice({
 });
 
 export const getUser = (state) => state.user;
+
+export const { addFavorite } = userSlice.actions;
 
 export default userSlice.reducer;
