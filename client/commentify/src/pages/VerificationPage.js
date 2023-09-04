@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { checkUser, getUser, verifyUser } from "../features/user/userSlice";
+
 import { useLocation, useNavigate } from "react-router-dom";
-import { HOME_PAGE, LOGIN_PAGE } from "../constants/path";
+import { useDispatch, useSelector } from "react-redux";
+import { getUser, verifyUser } from "../features/user/userSlice";
+
 import { Button } from "@mui/material";
 
-import { loginStyle } from "../components/Header/Header";
+import { HOME_PAGE, LOGIN_PAGE } from "../constants/path";
+import { loginStyle } from "../constants";
 
 function VerificationPage(props) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector(getUser);
 
-  const [message, setMessage] = useState("");
+  const [response, setResponse] = useState(null);
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -27,17 +29,8 @@ function VerificationPage(props) {
     }
 
     if (userId && uniqueString) {
-      console.log("Kanchvec verify");
       dispatch(verifyUser({ userId, uniqueString })).then((response) => {
-        console.log(response);
-        if (response.payload.status === "FAILED") {
-          alert(response.payload.status, "\n", response.payload.message);
-        } else if (response.payload.status === "SUCCESS") {
-          // setTimeout(() => navigate(LOGIN_PAGE), 3000);
-          console.log("Mtav else-i mej");
-
-          setMessage(response.payload.message);
-        }
+        setResponse(response.payload);
       });
     }
   }, []);
@@ -48,9 +41,28 @@ function VerificationPage(props) {
     }
   });
 
-  // useEffect(() => {
-  //   dispatch(checkUser());
-  // }, [dispatch]);
+  if (response) {
+    if (response.status === "FAILED") {
+      return (
+        <div>
+          <h1>{response.message}</h1>
+        </div>
+      );
+    } else if (response.status === "SUCCESS") {
+      return (
+        <div>
+          <h1>{response.message}</h1>
+          <Button
+            style={loginStyle}
+            variant="outlined"
+            onClick={() => navigate(LOGIN_PAGE)}
+          >
+            Log in
+          </Button>
+        </div>
+      );
+    }
+  }
 
   return (
     (fromSignup || (userId && uniqueString)) && (
@@ -60,18 +72,7 @@ function VerificationPage(props) {
             <h1>
               We sent you verification link to your email, please check inbox
             </h1>
-          </div>
-        )}
-        {message && (
-          <div>
-            <h1>{message}</h1>
-            <Button
-              style={loginStyle}
-              variant="outlined"
-              onClick={() => navigate(LOGIN_PAGE)}
-            >
-              Log in
-            </Button>
+            <p>Please open the link within 12 hours</p>
           </div>
         )}
       </>

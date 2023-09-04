@@ -21,8 +21,9 @@
   background-color: #fff;
   margin-right: 35px;
   width: 30%;
-  height: 38vh;
+  height: 42vh;
   gap: 10px;
+  overflow: hidden;
 }
 
 .userInfo {
@@ -30,6 +31,15 @@
   flex-direction: column;
   align-items: center;
   margin-top: 10px;
+}
+
+.userInfo h3 {
+  font-size: 16px;
+}
+
+.userInfo div {
+  width: 65px;
+  height: 65px;
 }
 
 .profile li {
@@ -54,4 +64,85 @@
   width: 70%;
   gap: 5px;
   overflow: hidden;
+}
+
+@media (max-width: 1000px) {
+  .container {
+    width: 80%;
+  }
+
+  .profile {
+    height: 40vh;
+  }
+
+  .posts {
+    width: 75%;
+  }
+
+  .userInfo div {
+    width: 55px;
+    height: 55px;
+  }
+
+  .userInfo h3 {
+    font-size: 14px;
+  }
+
+  .profile li {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 780px) {
+  .container {
+    width: 85%;
+  }
+
+  .profile {
+    height: 38vh;
+  }
+
+  .posts {
+    width: 80%;
+  }
+
+  .userInfo div {
+    width: 50px;
+    height: 50px;
+  }
+
+  .userInfo h3 {
+    font-size: 12px;
+  }
+
+  .profile li {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 580px) {
+  .container {
+    width: 95%;
+  }
+
+  .profile {
+    height: 36vh;
+  }
+
+  .posts {
+    width: 85%;
+  }
+
+  .userInfo div {
+    width: 45px;
+    height: 45px;
+  }
+
+  .userInfo h3 {
+    font-size: 10px;
+  }
+
+  .profile li {
+    font-size: 10px;
+  }
 }

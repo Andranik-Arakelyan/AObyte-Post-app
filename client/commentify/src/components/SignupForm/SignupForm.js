@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useFormik } from "formik";
 
 import { addUser } from "../../features/user/userSlice";
+
 import InButton from "../../UI/InButton";
 
 import signupSchema from "../../Validation/signup";

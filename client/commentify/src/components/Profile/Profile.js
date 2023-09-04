@@ -1,12 +1,20 @@
 import React, { useEffect, useState } from "react";
-import classes from "./Profile.module.css";
+
+import { useNavigate } from "react-router-dom";
+
 import { useDispatch, useSelector } from "react-redux";
 import { getUser, logOutUser } from "../../features/user/userSlice";
-import { Avatar, List, ListItem } from "@mui/material";
-import { ADD_POST, HOME_PAGE } from "../../constants/path";
-import { useNavigate } from "react-router-dom";
-import { fetchUserPosts } from "./fetchPosts";
+
 import Post from "./Post";
+
+import { Avatar, List, ListItem } from "@mui/material";
+
+import { fetchUserPosts } from "./fetchPosts";
+
+import { ADD_POST, HOME_PAGE } from "../../constants/path";
+
+import classes from "./Profile.module.css";
+import UserAvatar from "../UserAvatar/UserAvatar";
 
 function Profile(props) {
   const [fetching, setFetching] = useState(false);
@@ -18,9 +26,9 @@ function Profile(props) {
 
   useEffect(() => {
     setFetching(true);
-    fetchUserPosts().then((result) => {
+    fetchUserPosts().then((data) => {
       setFetching(false);
-      setUserPosts(result.data.posts);
+      setUserPosts(data.posts);
     });
   }, []);
 
@@ -46,10 +54,7 @@ function Profile(props) {
       <div className={classes.container}>
         <div className={classes.profile}>
           <div className={classes.userInfo}>
-            <Avatar
-              sx={{ width: "60px", height: "60px" }}
-              src={user.userData.avatar}
-            />
+            <UserAvatar userData={user.userData} src={user.userData.avatar} />
             <h3>{user.userData.name}</h3>
           </div>
           <div>

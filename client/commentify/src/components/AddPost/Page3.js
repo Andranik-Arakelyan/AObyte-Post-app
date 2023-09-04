@@ -10,10 +10,10 @@ function Page3({ formik }) {
     return categories.map((category) => {
       return (
         <FormControlLabel
-          key={category}
-          value={category}
+          key={category.name}
+          value={category.name}
           control={<Radio />}
-          label={category}
+          label={category.label}
         />
       );
     });

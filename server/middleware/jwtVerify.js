@@ -30,7 +30,7 @@ export const jwtVerify = (req, res, next) => {
             const newAccessToken = jwt.sign(
               { id: decoded.id },
               process.env.ACCESS_TOKEN_SECRET,
-              { expiresIn: "1m" }
+              { expiresIn: "2m" }
             );
 
             res.cookie("accessToken", newAccessToken, {
@@ -42,12 +42,12 @@ export const jwtVerify = (req, res, next) => {
           } catch (err) {
             res.json({
               status: "NO TOKEN",
-              message: "Token missing, user must login again",
+              message: "Token is missing, user must login again",
             });
           }
         } else {
           res.json({
-            status: "NO REFRESH TOKEN",
+            status: "REFRESH",
             message: "Try to send refresh token",
           });
         }

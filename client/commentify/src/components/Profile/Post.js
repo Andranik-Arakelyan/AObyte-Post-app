@@ -1,19 +1,19 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { HOME_PAGE } from "../../constants/path";
-import NoImageIcon from "@mui/icons-material/ImageNotSupportedOutlined";
+
+import { NO_IMAGE_URL } from "../../constants";
 
 import classes from "./Post.module.css";
 
 function Post({ postData }) {
   return (
-    <Link to={HOME_PAGE} className={classes.postContent}>
+    <Link to={`/posts/${postData._id}`} className={classes.postContent}>
       <div className={classes.imageContainer}>
-        {postData.image_url ? (
-          <img src={postData.image_url} className={classes.postImage} alt="" />
-        ) : (
-          <NoImageIcon />
-        )}
+        <img
+          src={postData.image_url || NO_IMAGE_URL}
+          className={classes.postImage}
+          alt="post"
+        />
       </div>
       <div className={classes.infoContainer}>
         <h3>{postData.title}</h3>

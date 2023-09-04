@@ -1,8 +1,11 @@
 import React, { useEffect } from "react";
-import { Header, Profile } from "../components";
+
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { getUser } from "../features/user/userSlice";
-import { useNavigate } from "react-router-dom";
+
+import { Header, Profile, Footer } from "../components";
+
 import { HOME_PAGE } from "../constants/path";
 
 function ProfilePage(props) {
@@ -16,10 +19,11 @@ function ProfilePage(props) {
   }, [user.auth, navigate, user.fetching]);
 
   return (
-    <>
+    <div className="container">
       <Header searchBar={true} addPostButton={true} />
       {user.auth && <Profile />}
-    </>
+      <Footer />
+    </div>
   );
 }
 

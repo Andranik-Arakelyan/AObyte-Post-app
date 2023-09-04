@@ -16,16 +16,12 @@ export const addTokens = (id, res, user) => {
   });
 
   res.cookie("refreshToken", refreshToken, {
-    maxAge: 7 * 24 * 3600 * 1000,
+    maxAge: 2 * 60 * 1000,
   });
-
-  console.log(
-    `addTokens called, accessToken is ${accessToken} and refreshToken is${refreshToken}, user is ${user}`
-  );
 
   res.json({
     status: "SUCCESS",
-    message: "Signed in Successfully, you can now use all features",
+    message: "Signed in Successfully",
     userData: user,
   });
 };

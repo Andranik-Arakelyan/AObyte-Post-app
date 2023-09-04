@@ -1,6 +1,10 @@
-.container {
+.main {
   padding: 20px;
   margin-top: 120px;
+}
+.container {
+  padding: 20px;
+  margin-top: 30px;
 }
 
 .posts {
@@ -22,4 +26,14 @@
 
 .selectedPage {
   text-decoration: underline;
+}
+
+.notFound > h2 {
+  font-size: 60px;
+  font-weight: 600;
+  color: #131032;
+}
+
+.notFound span {
+  color: #fe6257;
 }

@@ -1,20 +1,23 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 
-import Card from "../../UI/Card";
 import { useNavigate } from "react-router-dom";
-import { HOME_PAGE, SIGN_UP } from "../../constants/path";
+import { useFormik } from "formik";
+
 import { useDispatch } from "react-redux";
 import { closeModal } from "../../features/loginModal/loginModalSlice";
 import { loginUser } from "../../features/user/userSlice";
-import { useFormik } from "formik";
 
-import InButton from "../../UI/InButton";
-import { Backdrop } from "../../UI/Backdrop";
 import CloseIcon from "@mui/icons-material/Close";
+import InButton from "../../UI/InButton";
+import Card from "../../UI/Card";
+import { Backdrop } from "../../UI/Backdrop";
+
+import loginSchema from "../../Validation/login";
+
+import { HOME_PAGE, SIGN_UP } from "../../constants/path";
 
 import classes from "./Login.module.css";
-import loginSchema from "../../Validation/login";
 
 export const LoginModal = ({ closeIcon }) => {
   const [submiting, setSubmiting] = useState(false);

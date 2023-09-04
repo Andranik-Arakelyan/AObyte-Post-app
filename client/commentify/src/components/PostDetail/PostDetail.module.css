@@ -1,7 +1,7 @@
 .container {
   display: flex;
   flex-direction: column;
-  margin: 40px auto;
+  margin: 125px auto;
   width: 65%;
   height: auto;
   box-shadow: 0 0 2px black;
@@ -24,7 +24,7 @@
   justify-content: center;
 }
 .description p {
-  width: 60%;
+  width: 75%;
   text-align: justify;
   font-style: italic;
   font-size: 16px;
@@ -44,5 +44,158 @@
 
 .comments {
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  padding: 5px 10px;
+}
+
+.comment {
+  display: flex;
+  font-size: 16px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+.userComment {
+  width: 85%;
+  text-align: left;
+  background-color: #f0f2f5;
+  padding: 10px 12px;
+  border-radius: 12px;
+}
+
+.userComment > span {
+  font-weight: 600;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.addCommentContainer {
+  width: 80%;
+  display: flex;
+  gap: 25px;
+  margin: 30px auto 20px;
+  justify-content: center;
+}
+
+.comInput {
+  width: 530px;
+  border-radius: 25px;
+}
+
+.comInput input {
+  height: 16px;
+}
+
+@media (max-width: 1000px) {
+  .container {
+    width: 75%;
+  }
+
+  .heading {
+    font-size: 22px;
+  }
+
+  .postImage img {
+    width: 80%;
+  }
+
+  .description p {
+    width: 80%;
+    font-size: 14px;
+  }
+
+  .avatar div {
+    width: 40px;
+    height: 40px;
+  }
+
+  .comment {
+    font-size: 14px;
+  }
+
+  .comInput {
+    width: 480px;
+  }
+
+  .comInput input {
+    height: 14px;
+  }
+}
+
+@media (max-width: 780px) {
+  .container {
+    width: 85%;
+  }
+
+  .heading {
+    font-size: 20px;
+  }
+
+  .postImage img {
+    width: 85%;
+  }
+
+  .description p {
+    width: 85%;
+    font-size: 12px;
+  }
+
+  .avatar div {
+    width: 35px;
+    height: 35px;
+  }
+
+  .comment {
+    font-size: 12px;
+  }
+
+  .comInput {
+    width: 450px;
+  }
+
+  .comInput input {
+    height: 12px;
+  }
+}
+
+@media (max-width: 580px) {
+  .container {
+    width: 90%;
+  }
+
+  .heading {
+    font-size: 18px;
+  }
+
+  .postImage img {
+    width: 90%;
+  }
+
+  .description p {
+    width: 85%;
+    font-size: 10px;
+  }
+
+  .avatar div {
+    width: 30px;
+    height: 30px;
+  }
+
+  .comment {
+    font-size: 10px;
+  }
+
+  .comInput {
+    width: 420px;
+  }
+
+  .comInput input {
+    height: 10px;
+  }
 }

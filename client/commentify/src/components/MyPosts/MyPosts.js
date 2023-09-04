@@ -1,27 +1,28 @@
 import React, { useEffect, useState } from "react";
+
 import { fetchUserPosts } from "../Profile/fetchPosts";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { getUser } from "../../features/user/userSlice";
+
 import Post from "../Profile/Post";
+import EditModal from "./EditModal";
+import ConfirmModal from "./ConfirmModal";
 
 import SpeedDial from "@mui/material/SpeedDial";
 import SettingsIcon from "@mui/icons-material/Settings";
-
 import EditIcon from "@mui/icons-material/Edit";
 import PublishIcon from "@mui/icons-material/PublishedWithChanges";
 import UnpublisIcon from "@mui/icons-material/UnpublishedOutlined";
 import DeleteIcon from "@mui/icons-material/DeleteForever";
+import { SpeedDialAction } from "@mui/material";
 
-import EditModal from "./EditModal";
-import ConfirmModal from "./ConfirmModal";
 import { changePublicStatus, deletePost } from "./PostApi";
 
 import classes from "./MyPosts.module.css";
-import { SpeedDialAction } from "@mui/material";
 
 function MyPosts(props) {
   const [fetching, setFetching] = useState(false);
+  const [confirmed, setConfirmed] = useState(false);
   const [userPosts, setUserPosts] = useState([]);
   const [deleteModal, setDeleteModal] = useState(false);
   const [publishModal, setPublishModal] = useState(false);
@@ -29,16 +30,18 @@ function MyPosts(props) {
   const [pickedPost, setPickedPost] = useState(null);
 
   const user = useSelector(getUser);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   useEffect(() => {
     setFetching(true);
-    fetchUserPosts().then((result) => {
+    fetchUserPosts().then((data) => {
       setFetching(false);
-      setUserPosts(result.data.posts);
+      setUserPosts(data.posts);
     });
-  }, [deleteModal, editModal, publishModal]);
+  }, [confirmed]);
+
+  const handleConfirmedChange = () => {
+    setConfirmed((prev) => !prev);
+  };
 
   const handleDeleteModalStatus = () => {
     setDeleteModal((prev) => !prev);
@@ -71,7 +74,7 @@ function MyPosts(props) {
     if (!userPosts.length) {
       return (
         <p style={{ fontSize: "20px", fontWeight: "500" }}>
-          You don't have any created post yet{" "}
+          You don't have any created post yet
         </p>
       );
     }
@@ -118,6 +121,7 @@ function MyPosts(props) {
           handleModalClose={handleDeleteModalStatus}
           message="delete"
           confirmAction={deletePost}
+          toggleConfirm={handleConfirmedChange}
         />
       )}
       {publishModal && (
@@ -126,10 +130,15 @@ function MyPosts(props) {
           handleModalClose={handlePublishModalStatus}
           message={pickedPost.isPublic ? "unpublish" : "publish"}
           confirmAction={changePublicStatus}
+          toggleConfirm={handleConfirmedChange}
         />
       )}
       {editModal && (
-        <EditModal post={pickedPost} handleModalCLose={handleEditModalStatus} />
+        <EditModal
+          post={pickedPost}
+          handleModalCLose={handleEditModalStatus}
+          toggleConfirm={handleConfirmedChange}
+        />
       )}
     </div>
   );

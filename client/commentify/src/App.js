@@ -8,6 +8,7 @@ import {
   PROFILE_PAGE,
   MY_POSTS_PAGE,
   LOGIN_PAGE,
+  PAGE_DETAIL,
 } from "./constants/path";
 import HomePage from "./pages/HomePage";
 import SignUpPage from "./pages/SignUpPage";
@@ -21,6 +22,7 @@ import { useEffect } from "react";
 import ProfilePage from "./pages/ProfilePage";
 import MyPostsPage from "./pages/MyPostsPage";
 import LoginPage from "./pages/LoginPage";
+import PostDetailPage from "./pages/PostDetailPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -48,11 +50,11 @@ function App() {
       path: VERIFICATION,
       element: user.auth ? <HomePage /> : <VerificationPage />,
     },
-    // {
-    //   path: PAGE_DETAIL,
-    //   element: <PostDetailPage />,
-    //   action: authAction,
-    // },
+    {
+      path: PAGE_DETAIL,
+      element: <PostDetailPage />,
+      scrollBehavior: "auto",
+    },
     {
       path: ADD_POST,
       element: <AddPostPage />,

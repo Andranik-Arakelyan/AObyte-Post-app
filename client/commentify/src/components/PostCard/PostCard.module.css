@@ -15,6 +15,17 @@
   padding: 14px 25px 10px 15px;
 }
 
+.creator {
+  display: flex;
+  align-items: center;
+  margin-right: 25px;
+  gap: 10px;
+}
+
+.creator span {
+  text-align: left;
+}
+
 .title {
   display: flex;
   flex-direction: column;
@@ -37,7 +48,7 @@
 
 .title span {
   color: #7c7c7c;
-  font-size: 15px;
+  font-size: 16px;
 }
 
 .postImage {
@@ -83,10 +94,11 @@
   margin: 12px auto 24px;
 }
 
-.postActions div {
+.action {
   display: flex;
   border-radius: 15px;
   padding: 5px 10px;
+  text-decoration: none;
   align-items: center;
   gap: 5px;
   font-size: 18px;
@@ -95,6 +107,101 @@
   transition: all 0.25s;
 }
 
-.postActions div:hover {
+.action:hover {
   box-shadow: 0 0 2px #7c7c7c;
+}
+
+.liked svg {
+  color: #fe6257;
+}
+
+@media (max-width: 1000px) {
+  .postContainer {
+    width: 65%;
+    font-size: 14px;
+  }
+  .postHeader {
+    padding: 10px 10px 10px 9px;
+  }
+
+  .title a {
+    font-size: 22px;
+  }
+  .title span {
+    font-size: 14px;
+  }
+
+  .postDescription {
+    font-size: 16px;
+  }
+
+  .postDescription span {
+    font-size: 16px;
+  }
+  .action {
+    font-size: 16px;
+  }
+  .action svg {
+    width: 25px;
+  }
+}
+
+@media (max-width: 780px) {
+  .postContainer {
+    width: 80%;
+    font-size: 12px;
+  }
+  .postHeader {
+    padding: 8px 8px 10px 8px;
+  }
+
+  .title a {
+    font-size: 20px;
+  }
+  .title span {
+    font-size: 12px;
+  }
+
+  .postDescription {
+    font-size: 14px;
+  }
+
+  .postDescription span {
+    font-size: 14px;
+  }
+
+  .action {
+    font-size: 14px;
+  }
+  .action svg {
+    width: 20px;
+  }
+}
+
+@media (max-width: 580px) {
+  .postContainer {
+    width: 90%;
+    font-size: 10px;
+  }
+
+  .title a {
+    font-size: 18px;
+  }
+  .title span {
+    font-size: 10px;
+  }
+
+  .postDescription {
+    font-size: 12px;
+  }
+
+  .postDescription span {
+    font-size: 12px;
+  }
+  .action {
+    font-size: 12px;
+  }
+  .action svg {
+    width: 18px;
+  }
 }

@@ -1,15 +1,29 @@
 import React from "react";
+
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { Button } from "@mui/material";
-import { deletePost } from "./PostApi";
 
-function ConfirmModal({ handleModalClose, post, message, confirmAction }) {
+function ConfirmModal({
+  handleModalClose,
+  post,
+  message,
+  confirmAction,
+  toggleConfirm,
+}) {
   const confirm = () => {
-    confirmAction(post._id).then(() => handleModalClose());
+    confirmAction(post._id, post.creatorId).then((data) => {
+      handleModalClose();
+      toggleConfirm();
+      if (data.status !== "SUCCESS") {
+        if (data.message) {
+          return alert(data.message);
+        }
+      }
+    });
   };
 
   return (
@@ -32,7 +46,7 @@ function ConfirmModal({ handleModalClose, post, message, confirmAction }) {
         </Button>
         <Button
           sx={{ color: "#131032", fontWeight: "700" }}
-          onClick={() => confirm(post._id)}
+          onClick={() => confirm()}
           autoFocus
         >
           Yes

@@ -1,8 +1,11 @@
 import React, { useEffect } from "react";
-import { LoginModal } from "../components/Login/Login";
+
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { getUser } from "../features/user/userSlice";
-import { useNavigate } from "react-router-dom";
+
+import { LoginModal } from "../components/Login/Login";
+
 import { HOME_PAGE } from "../constants/path";
 
 function LoginPage(props) {
@@ -18,7 +21,7 @@ function LoginPage(props) {
   return (
     !user.auth &&
     !user.fetching && (
-      <div>
+      <div className="container">
         <LoginModal />
       </div>
     )

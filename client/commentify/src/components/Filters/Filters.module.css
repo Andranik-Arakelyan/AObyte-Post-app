@@ -1,0 +1,48 @@
+.drawer {
+  z-index: 3000;
+}
+
+.filter {
+  position: fixed;
+  right: 3%;
+}
+
+.box {
+  width: 300px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.sorting {
+  display: flex;
+  margin: 15px 0;
+  gap: 5px;
+}
+
+@media (max-width: 1000px) {
+  .filter button {
+    width: 80px;
+    font-size: 12px;
+    font-weight: 800;
+  }
+}
+
+@media (max-width: 780px) {
+  .filter button {
+    min-width: 40px;
+    width: 40px;
+  }
+  .filter span {
+    display: none;
+  }
+}
+
+@media (max-width: 580px) {
+  .filter button {
+    min-width: 20px;
+    width: 25px;
+    height: 25px;
+  }
+}

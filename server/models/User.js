@@ -23,6 +23,7 @@ const UserSchema = new Schema({
   avatar_url: {
     type: String,
   },
+  favorites: [{ type: Schema.Types.ObjectId, ref: "Post" }],
   posts: [String],
   verified: Boolean,
 });

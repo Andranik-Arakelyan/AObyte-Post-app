@@ -1,10 +1,14 @@
 import React, { useEffect } from "react";
-import { Header } from "../components";
-import { AddPost } from "../components";
+
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { getUser } from "../features/user/userSlice";
-import { HOME_PAGE, LOGIN_PAGE } from "../constants/path";
+
+import { Footer } from "../components";
+import { Header } from "../components";
+import { AddPost } from "../components";
+
+import { LOGIN_PAGE } from "../constants/path";
 
 function AddPostPage(props) {
   const user = useSelector(getUser);
@@ -12,7 +16,6 @@ function AddPostPage(props) {
 
   useEffect(() => {
     if (!user.auth && !user.fetching) {
-      console.log("NAVIGATED");
       navigate(LOGIN_PAGE);
     }
   }, [user.auth, navigate]);
@@ -20,10 +23,11 @@ function AddPostPage(props) {
   return (
     !user.fetching &&
     user.auth && (
-      <>
+      <div className="container">
         <Header searchBar={true} />
         <AddPost />
-      </>
+        <Footer />
+      </div>
     )
   );
 }

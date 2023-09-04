@@ -1,6 +1,7 @@
 import { api } from "../../api/api";
+import { tokensHandler } from "../../helpers/cookies";
 
-export const fetchPosts = () => api.get("/posts");
+// export const fetchPosts = () => api.get("/posts");
 
 export const addPost = async (formData) => {
   try {
@@ -9,11 +10,28 @@ export const addPost = async (formData) => {
         "Content-Type": "multipart/form-data",
       },
     });
-    return response;
+    return tokensHandler(response, async () => await addPost(formData));
   } catch (error) {
     console.error("ERROR OCCURED IN postsApi adding post");
     throw error;
   }
+};
+
+export const fetchPosts = async ({ page, filters }) => {
+  const url = new URL(`${process.env.REACT_APP_SERVER_BASE_URL}posts`);
+
+  url.searchParams.append("page", page);
+
+  if (Object.entries(filters).length) {
+    Object.entries(filters).forEach(([key, value]) => {
+      url.searchParams.append(key, value);
+    });
+  }
+  const response = await api.get(url);
+  return tokensHandler(
+    response,
+    async () => await fetchPosts({ page, filters })
+  );
 };
 
 export const addNewComment = async (postId, comData) => {

@@ -1,10 +1,12 @@
 import React, { useEffect } from "react";
+
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { getUser } from "../features/user/userSlice";
-import { useNavigate } from "react-router-dom";
+
+import { Header, MyPosts, Footer } from "../components";
+
 import { HOME_PAGE } from "../constants/path";
-import { Header } from "../components";
-import MyPosts from "../components/MyPosts/MyPosts";
 
 function MyPostsPage(props) {
   const user = useSelector(getUser);
@@ -17,9 +19,10 @@ function MyPostsPage(props) {
   }, [user.auth, navigate, user.fetching]);
 
   return (
-    <div>
+    <div className="container">
       <Header searchBar={true} addPostButton={true} />
       {user.auth && <MyPosts />}
+      <Footer />
     </div>
   );
 }

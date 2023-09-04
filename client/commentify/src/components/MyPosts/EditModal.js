@@ -20,26 +20,27 @@ import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import { useFormik } from "formik";
 import postSchema from "../../Validation/newPost";
 
+import { editPost } from "./PostApi";
+
 import { categories } from "../../constants";
 
 import classes from "./MyPosts.module.css";
-import { editPost } from "./PostApi";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function EditModal({ handleModalCLose, post }) {
+function EditModal({ handleModalCLose, post, toggleConfirm }) {
   const [submitting, setSubmitting] = useState(false);
 
   const renderCategories = () => {
     return categories.map((category) => {
       return (
         <FormControlLabel
-          key={category}
-          value={category}
+          key={category.name}
+          value={category.name}
           control={<Radio />}
-          label={category}
+          label={category.label}
         />
       );
     });
@@ -62,12 +63,17 @@ function EditModal({ handleModalCLose, post }) {
       formData.append("category", values.category);
       formData.append("uploadedPhoto", values.uploadedPhoto);
       formData.append("isPublic", values.isPublic);
+      formData.append("creatorId", post.creatorId);
 
-      editPost(post._id, formData).then((response) => {
-        if (response.payload.status === "SUCCESS") {
+      editPost(post._id, formData).then((data) => {
+        if (data.status === "SUCCESS") {
+          toggleConfirm();
           handleModalCLose();
         } else {
-          Object.entries(response.payload.errors).forEach((error) => {
+          if (data.message) {
+            return alert(data.message);
+          }
+          Object.entries(data.errors).forEach((error) => {
             setFieldError(error[0], error[1]);
           });
         }
@@ -82,6 +88,7 @@ function EditModal({ handleModalCLose, post }) {
       open={true}
       onClose={handleModalCLose}
       TransitionComponent={Transition}
+      sx={{ zIndex: "5000" }}
     >
       <AppBar sx={{ backgroundColor: "#FE6257" }}>
         <Toolbar>
@@ -179,13 +186,6 @@ function EditModal({ handleModalCLose, post }) {
             {formik.touched.uploadedPhoto && formik.errors.uploadedPhoto ? (
               <p>{formik.errors.uploadedPhoto}</p>
             ) : null}
-            {/* <Button
-              sx={{ width: "20%" }}
-              variant="contained"
-              onClick={formik.handleSubmit}
-            >
-              Save Changes
-            </Button> */}
           </div>
         </form>
       </div>

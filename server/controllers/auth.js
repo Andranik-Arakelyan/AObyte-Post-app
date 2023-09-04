@@ -15,10 +15,10 @@ export const signUp = (req, res, next) => {
           errors: { email: "User with this email already exists" },
         });
       } else {
-        bcrypt.hash(password, 10).then((hashedPassword) => {
+        bcrypt.hash(password.trim(), 10).then((hashedPassword) => {
           const newUser = new User({
-            name,
-            email,
+            name: name.trim(),
+            email: email.trim(),
             password: hashedPassword,
             dateOfBirth,
             verified: false,
@@ -52,7 +52,6 @@ export const signUp = (req, res, next) => {
 export const logIn = (req, res) => {
   let { email, password } = req.body;
 
-  console.log(email, password);
   User.findOne({ email })
     .then((user) => {
       if (user) {

@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 
 import UserVerification from "../models/UserVerification.js";
 
-export const sendVerificationEmail = (result, res) => {
+export const sendVerificationEmail = (result, res, resend) => {
   const { _id, email } = result;
   const uniqueString = v4() + _id;
 
@@ -27,7 +27,7 @@ export const sendVerificationEmail = (result, res) => {
         userId: _id,
         uniqueString: hashedUniquestring,
         createdAt: Date.now(),
-        expiresAt: Date.now() + 21600000,
+        expiresAt: Date.now() + 12 * 360 * 1000,
       });
 
       newVerification
@@ -36,11 +36,17 @@ export const sendVerificationEmail = (result, res) => {
           transporter
             .sendMail(mailOptions)
             .then(() => {
-              console.log("EMAIL SENT");
+              console.log("HASAV STEX");
+              if (resend) {
+                return res.json({
+                  status: "FAILED",
+                  message:
+                    "That link you clicked is not valid enymore, we will send new link to your email",
+                });
+              }
               res.json({
                 status: "SUCCESS",
                 message: "Verification link sent to email",
-                // userData: result,
               });
             })
             .catch((err) => {

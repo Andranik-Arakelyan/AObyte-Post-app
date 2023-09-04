@@ -1,6 +1,10 @@
 import { api } from "../../api/api";
+import { tokensHandler } from "../../helpers/cookies";
 
-export const checkUserExistance = () => api.get(`check-user`);
+export const checkUserExistance = async () => {
+  const response = await api.get(`check-user`);
+  return tokensHandler(response, async () => await checkUserExistance());
+};
 
 export const createUser = (formData) => api.post(`sign-up`, formData);
 

@@ -6,11 +6,14 @@ import {
   addPost,
   deletePost,
   editPost,
+  getPostDetails,
   getPosts,
   getUserPosts,
+  searchPosts,
   updatePostStatus,
 } from "../controllers/post.js";
 import { newPostValidation } from "../middleware/validations/newPostValidation.js";
+import { checkAuthor } from "../middleware/checkAuthor.js";
 
 const upload = Multer({
   storage: Multer.memoryStorage(),
@@ -23,7 +26,11 @@ const router = express.Router();
 
 router.get("/posts", getPosts);
 
+router.get("/posts/:postId", getPostDetails);
+
 router.get("/user/posts", jwtVerify, getUserPosts);
+
+router.post("/posts/search", searchPosts);
 
 router.post(
   "/posts",
@@ -33,15 +40,16 @@ router.post(
   addPost
 );
 
-router.delete("/user/posts/:postId", jwtVerify, deletePost);
+router.delete("/user/posts/:postId", jwtVerify, checkAuthor, deletePost);
 
-router.put("/user/posts/:postId", jwtVerify, updatePostStatus);
+router.put("/user/posts/:postId", jwtVerify, checkAuthor, updatePostStatus);
 
 router.put(
   "/user/posts/:postId/edit",
   jwtVerify,
   upload.single("uploadedPhoto"),
   newPostValidation,
+  checkAuthor,
   editPost
 );
 

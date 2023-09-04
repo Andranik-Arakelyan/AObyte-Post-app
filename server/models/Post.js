@@ -20,7 +20,13 @@ const PostSchema = new Schema({
 
   createdAt: {
     type: Date,
-    default: Date.now,
+    default: Date.now(),
+
+    // () => {
+    //   const threeDaysAgo = new Date();
+    //   threeDaysAgo.setDate(threeDaysAgo.getDate() - 7);
+    //   return threeDaysAgo;
+    // },
   },
 
   image_url: {
@@ -36,6 +42,10 @@ const PostSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "User",
     required: true,
+  },
+
+  likes: {
+    type: [String],
   },
 });
 
